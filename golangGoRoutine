@@ -1,0 +1,53 @@
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+func processNumber(num int, results chan<- int, wg *sync.WaitGroup) {
+	defer wg.Done() // Memberitahu WaitGroup bahwa goroutine telah selesai
+	squared := num * num
+	results <- squared // Mengirim hasil kuadrat ke channel
+}
+
+func main() {
+	var count int
+	fmt.Println("Masukkan jumlah bilangan positif yang ingin diproses (minimal 10):")
+	fmt.Scan(&count)
+
+	if count < 10 {
+		fmt.Println("Jumlah harus minimal 10.")
+		return
+	}
+
+	numbers := make([]int, count)
+	fmt.Println("Masukkan angka-angka positif, dipisahkan dengan spasi:")
+	for i := 0; i < count; i++ {
+		fmt.Scan(&numbers[i])
+	}
+
+	results := make(chan int, count) // Channel untuk hasil
+	var wg sync.WaitGroup            // WaitGroup untuk menunggu goroutine selesai
+
+	// Memproses setiap bilangan dengan goroutine
+	for _, num := range numbers {
+		wg.Add(1) // Menambahkan hitungan untuk WaitGroup
+		go processNumber(num, results, &wg)
+	}
+
+	wg.Wait()      // Menunggu semua goroutine selesai
+	close(results) // Menutup channel setelah semua goroutine selesai
+
+	squaredResults := make([]int, 0, count)
+	for res := range results {
+		squaredResults = append(squaredResults, res) // Menampung hasil dari channel
+	}
+
+	// Menampilkan hasil
+	fmt.Println("Hasil kuadrat:")
+	for _, squared := range squaredResults {
+		fmt.Print(squared, " ")
+	}
+	fmt.Println()
+}
