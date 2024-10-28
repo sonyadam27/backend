@@ -1,0 +1,27 @@
+package main
+
+import (
+	"buku" // Sesuaikan dengan nama folder proyek Anda
+	"fmt"
+)
+
+func main() {
+	// Membuat instance dari struct Buku
+	buku1 := buku.Buku{
+		Judul:       "Belajar Golang",
+		Penulis:     "John Doe",
+		Harga:       150000,
+		TahunTerbit: 2022,
+	}
+
+	// Menampilkan informasi buku sebelum mengubah harga
+	fmt.Println("Informasi Buku Sebelum Mengubah Harga:")
+	buku1.DisplayBook()
+
+	// Mengubah harga buku
+	buku1.UbahHarga(200000)
+
+	// Menampilkan informasi buku setelah mengubah harga
+	fmt.Println("\nInformasi Buku Setelah Mengubah Harga:")
+	buku1.DisplayBook()
+}
