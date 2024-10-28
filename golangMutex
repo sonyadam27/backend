@@ -1,0 +1,58 @@
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+type BankAccount struct {
+	saldo int
+	mu    sync.Mutex // Mutex untuk melindungi akses ke saldo
+}
+
+// Method untuk setoran
+func (b *BankAccount) Deposit(amount int, wg *sync.WaitGroup, statusChan chan<- string) {
+	defer wg.Done() // Menandakan bahwa goroutine ini telah selesai
+	b.mu.Lock()     // Mengunci akses ke saldo
+	b.saldo += amount
+	b.mu.Unlock() // Membuka kunci akses ke saldo
+	statusChan <- fmt.Sprintf("Setor: %d, Saldo Akhir: %d", amount, b.saldo)
+}
+
+// Method untuk penarikan
+func (b *BankAccount) Withdraw(amount int, wg *sync.WaitGroup, statusChan chan<- string) {
+	defer wg.Done() // Menandakan bahwa goroutine ini telah selesai
+	b.mu.Lock()     // Mengunci akses ke saldo
+	if b.saldo >= amount {
+		b.saldo -= amount
+		statusChan <- fmt.Sprintf("Tarik: %d, Saldo Akhir: %d", amount, b.saldo)
+	} else {
+		statusChan <- fmt.Sprintf("Tarik: %d Gagal, Saldo Tersisa: %d", amount, b.saldo)
+	}
+	b.mu.Unlock() // Membuka kunci akses ke saldo
+}
+
+func main() {
+	account := &BankAccount{saldo: 1000} // Akun bank dengan saldo awal 1000
+	var wg sync.WaitGroup
+	statusChan := make(chan string, 10) // Channel untuk status transaksi
+
+	// Simulasi transaksi: beberapa nasabah melakukan setoran dan penarikan
+	wg.Add(5)                                  // Total 5 goroutine
+	go account.Deposit(500, &wg, statusChan)   // Goroutine 1: setoran 500
+	go account.Withdraw(200, &wg, statusChan)  // Goroutine 2: penarikan 200
+	go account.Deposit(300, &wg, statusChan)   // Goroutine 3: setoran 300
+	go account.Withdraw(1200, &wg, statusChan) // Goroutine 4: penarikan 1200 (akan gagal)
+	go account.Withdraw(600, &wg, statusChan)  // Goroutine 5: penarikan 600 (akan gagal)
+
+	wg.Wait()         // Menunggu semua goroutine selesai
+	close(statusChan) // Menutup channel setelah semua transaksi selesai
+
+	// Menampilkan status transaksi
+	for status := range statusChan {
+		fmt.Println(status)
+	}
+
+	// Menampilkan saldo akhir
+	fmt.Printf("Saldo Akhir: %d\n", account.saldo)
+}
