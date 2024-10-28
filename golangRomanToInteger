@@ -1,0 +1,49 @@
+package main
+
+import (
+	"fmt"
+)
+
+func romanToInt(s string) int {
+	// Peta untuk menyimpan nilai masing-masing simbol romawi
+	romanMap := map[rune]int{
+		'I': 1,
+		'V': 5,
+		'X': 10,
+		'L': 50,
+		'C': 100,
+		'D': 500,
+		'M': 1000,
+	}
+
+	total := 0
+	n := len(s)
+
+	for i := 0; i < n; i++ {
+		// Dapatkan nilai saat ini
+		currentValue := romanMap[rune(s[i])]
+		// Jika bukan angka terakhir dan nilai saat ini kurang dari nilai berikutnya
+		if i < n-1 && currentValue < romanMap[rune(s[i+1])] {
+			total -= currentValue // Kurangi nilai
+		} else {
+			total += currentValue // Tambahkan nilai
+		}
+	}
+
+	return total
+}
+
+func main() {
+	testCases := []string{
+		"III",
+		"LVIII",
+		"MCMXCIV",
+		"IX",
+		"XLII",
+	}
+
+	for _, s := range testCases {
+		result := romanToInt(s)
+		fmt.Printf("Input: %s, Output: %d\n", s, result)
+	}
+}
