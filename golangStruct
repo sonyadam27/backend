@@ -1,0 +1,24 @@
+package buku
+
+import "fmt"
+
+// Struct Buku yang merepresentasikan sebuah buku
+type Buku struct {
+	Judul       string
+	Penulis     string
+	Harga       float64
+	TahunTerbit int
+}
+
+// Method untuk menampilkan informasi buku
+func (b *Buku) DisplayBook() {
+	fmt.Printf("Judul: %s\n", b.Judul)
+	fmt.Printf("Penulis: %s\n", b.Penulis)
+	fmt.Printf("Harga: %.2f IDR\n", b.Harga)
+	fmt.Printf("Tahun Terbit: %d\n", b.TahunTerbit)
+}
+
+// Method untuk mengubah harga buku
+func (b *Buku) UbahHarga(hargaBaru float64) {
+	b.Harga = hargaBaru
+}
