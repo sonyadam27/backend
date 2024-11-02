@@ -1,0 +1,67 @@
+SQL query dari task berikut:
+Anda memiliki dua tabel, yaitu customers (pelanggan) dan orders (pesanan). Tugas Anda adalah menghitung total jumlah yang dibelanjakan oleh setiap pelanggan dan menampilkan daftar pelanggan yang menghabiskan lebih dari 1000 dalam transaksi mereka. Output diurutkan berdasarkan customer_id.
+
+Output dari query ini harus menampilkan kolom-kolom berikut:
+customer_id: ID pelanggan
+name: Nama pelanggan
+total_spent: Total jumlah uang yang telah dibelanjakan oleh pelanggan
+ 
+Notes:
+Codework sudah menyediakan tabel, sehingga Anda tidak perlu membuat atau memasukkan tabel baru.
+ 
+Skema Tabel:
+Tabel customers:
+customer_id (INT, Primary Key): ID unik untuk pelanggan.
+name (VARCHAR): Nama pelanggan.
+email (VARCHAR): Email pelanggan.
+city (VARCHAR): Kota tempat tinggal pelanggan.
+
+customer_id	name	email	city
+1	Alice	alice@example.com	New York
+2	Bob	bob@example.com	Los Angeles
+3	Charlie	charlie@example.com	Chicago
+4	Diana	diana@example.com	Houston
+5	Evan	evan@example.com	Phoenix
+ 
+Tabel orders:
+order_id (INT, Primary Key): ID unik untuk pesanan.
+customer_id (INT, Foreign Key): ID pelanggan yang melakukan pesanan.
+order_date (DATE): Tanggal pesanan.
+amount (DECIMAL): Jumlah total dari pesanan.
+ 
+order_id	customer_id	order_date	amount
+1	1	2023-01-10	150.00
+2	1	2023-02-15	250.50
+3	1	2023-03-05	250.00
+4	2	2023-02-20	200.00
+5	2	2023-03-11	150.00
+6	3	2023-01-22	300.00
+7	3	2023-04-01	250.00
+8	3	2023-04-15	250.00
+9	4	2023-02-28	100.00
+...	...	...	...
+25	5	2023-11-20	90.00
+ 
+Output:
+Output dari query Anda harus menampilkan daftar pelanggan yang menghabiskan lebih dari 1000 dalam total transaksi mereka.
+Contoh outputnya adalah sebagai berikut:
+customer_id	name	total_spent
+1	Alice	1000.5
+3	Charlie	1200
+5	Evan	1040
+
+Answers:
+SELECT   
+    c.customer_id,  
+    c.name,  
+    SUM(o.amount) AS total_spent  
+FROM   
+    customers c  
+JOIN   
+    orders o ON c.customer_id = o.customer_id  
+GROUP BY   
+    c.customer_id, c.name  
+HAVING   
+    SUM(o.amount) > 1000  
+ORDER BY   
+    c.customer_id;
