@@ -1,0 +1,75 @@
+SQL Query for the task below:
+Anda memiliki dua tabel, yaitu employees (karyawan) dan skills (keterampilan). Tugas Anda adalah menemukan karyawan yang memiliki keterampilan dalam lebih dari tiga bidang dan menampilkan jumlah keterampilan yang dimiliki oleh setiap karyawan tersebut.
+Output dari query ini harus menampilkan kolom-kolom berikut:
+
+employee_id: ID unik karyawan
+name: Nama karyawan
+skill_count: Jumlah keterampilan yang dimiliki karyawan
+ 
+Notes:
+Codework sudah menyediakan tabel, sehingga Anda tidak perlu membuat atau memasukkan tabel baru.
+ 
+Skema Tabel:
+Tabel employees:
+employee_id (INT, Primary Key): ID unik untuk setiap karyawan.
+name (VARCHAR): Nama karyawan.
+department (VARCHAR): Departemen tempat karyawan bekerja.
+position (VARCHAR): Jabatan karyawan.
+
+employee_id	name	department	position
+1	John Doe	Engineering	Software Engineer
+2	Jane Roe	Marketing	Marketing Specialist
+3	Emma Smith	Design	UX Designer
+4	Mike Brown	Engineering	DevOps Engineer
+5	Alice Johnson	Human Resources	HR Manager
+ 
+Tabel skills:
+skill_id (INT, Primary Key): ID unik untuk setiap keterampilan.
+employee_id (INT, Foreign Key): ID karyawan yang memiliki keterampilan tersebut (merujuk ke employee_id di tabel employees).
+skill_name (VARCHAR): Nama keterampilan yang dimiliki karyawan.
+
+skill_id	employee_id	skill_name
+1	1	Python
+2	1	JavaScript
+3	1	SQL
+4	2	SEO
+5	2	Content Marketing
+6	3	Wireframing
+7	3	UI Design
+8	4	Linux Administration
+9	4	Docker
+10	5	Employee Relations
+11	5	Recruitment
+12	2	Social Media Marketing
+13	1	Java
+14	3	Prototyping
+15	4	Kubernetes
+16	4	Cloud Computing
+17	5	Talent Management
+18	2	Copywriting
+19	1	C++
+20	3	Graphic Design
+
+Output:
+Output dari query Anda harus menampilkan daftar karyawan yang memiliki lebih dari tiga keterampilan, beserta jumlah keterampilan yang dimiliki oleh masing-masing karyawan. Contoh outputnya adalah sebagai berikut:
+employee_id	name	skill_count
+1	John Doe	5
+2	Jane Roe	4
+3	Emma Smith	4
+4	Mike Brown	4
+
+Answer:
+SELECT   
+    e.employee_id,  
+    e.name,  
+    COUNT(s.skill_id) AS skill_count  
+FROM   
+    employees e  
+JOIN   
+    skills s ON e.employee_id = s.employee_id  
+GROUP BY   
+    e.employee_id, e.name  
+HAVING   
+    COUNT(s.skill_id) > 3  
+ORDER BY   
+    e.employee_id;
