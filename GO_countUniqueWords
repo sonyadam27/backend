@@ -1,0 +1,74 @@
+Buatlah sebuah fungsi bernama count_unique_words yang menerima input berupa string teks panjang (paragraf).
+Fungsi ini harus mengembalikan sebuah dictionary, di mana kunci adalah kata-kata unik yang muncul dalam teks, dan nilai adalah jumlah kemunculan masing-masing kata tersebut.
+
+Notes:
+Untuk menampilkan output, silakan gunakan Return.
+Codework sudah menyediakan inputan, sehingga Anda hanya perlu membuat codingan yang mengelola inputan tersebut.
+ 
+Ketentuan:
+Penghitungan kata harus case-insensitive, artinya perbedaan antara huruf besar dan kecil tidak dihitung (contoh: "Hari" dan "hari" dianggap sama).
+Kata-kata dipisahkan oleh spasi, dan tanda baca dasar harus diabaikan.
+Teks input bisa mengandung huruf, angka, dan tanda baca dasar.
+ 
+Contoh 1:
+Input:
+"Hari ini hari yang cerah. Saya ingin bermain di luar."
+Output:
+{'hari': 2, 'ini': 1, 'yang': 1, 'cerah': 1, 'saya': 1, 'ingin': 1, 'bermain': 1, 'di': 1, 'luar': 1}
+
+Answer:
+
+package main  
+import (  
+	"fmt"  
+	"strings"  
+	"unicode"  
+)  
+
+func countUniqueWords(s string) string {  
+	// Create a map to store unique word counts  
+	wordCount := make(map[string]int)  
+
+	// Split the string into words, handling spaces  
+	words := strings.Fields(s)  
+	for _, word := range words {  
+		// Clean up the word and convert to lowercase  
+		cleanedWord := cleanString(word)  
+		if cleanedWord != "" {  
+			wordCount[cleanedWord]++  
+		}  
+	}  
+
+	// Prepare string output for the word count map  
+	output := "{"  
+	for word, count := range wordCount {  
+		output += fmt.Sprintf("'%s': %d, ", word, count)  
+	}  
+	// Remove trailing comma and space, if present  
+	if len(output) > 1 {  
+		output = output[:len(output)-2]  
+	}  
+	output += "}"  
+
+	return output  
+}  
+
+// Helper function to clean the words by removing punctuation  
+func cleanString(word string) string {  
+	var cleaned strings.Builder  
+	for _, char := range word {  
+		if unicode.IsLetter(char) || unicode.IsDigit(char) {  
+			cleaned.WriteRune(unicode.ToLower(char))  
+		}  
+	}  
+	return cleaned.String()  
+}  
+
+func main() {  
+	// Example input  
+	inputText := "Hari ini hari yang cerah. Saya ingin bermain di luar."  
+	// Call the countUniqueWords function  
+	result := countUniqueWords(inputText)  
+	// Print the result  
+	fmt.Println(result) // Output: {'hari': 2, 'ini': 1, 'yang': 1, 'cerah': 1, 'saya': 1, 'ingin': 1, 'bermain': 1, 'di': 1, 'luar': 1}  
+}
