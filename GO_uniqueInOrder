@@ -1,0 +1,48 @@
+Anda diminta untuk membuat sebuah fungsi dengan nama uniqueInOrder yang menghilangkan karakter yang berulang sehingga hanya tersisa satu karakter unik.
+Karakter yang tersisa harus mempertahankan urutan aslinya.
+Fungsi ini bersifat case sensitive, artinya huruf kapital dan huruf kecil dianggap sebagai karakter yang berbeda.
+Notes:
+Untuk menampilkan output, silakan gunakan Return.
+Codework sudah menyediakan inputan, sehingga Anda hanya perlu membuat codingan yang mengelola inputan tersebut.
+ 
+Contoh 1:
+Input:
+AAAAABBBBCCDAADD
+Output:
+[ 'A', 'B', 'C', 'D', 'A', 'B' ]
+
+Answer:
+
+package main  
+import (  
+	"fmt"  
+	"strings"  
+)  
+
+func uniqueInOrder(s string) string {  
+	// Create a slice to store unique characters  
+	var uniqueList []rune  
+	var prev rune  
+
+	// Iterate through each character in the string  
+	for i, char := range s {  
+		// Add the character to the list if it's different from the previous one  
+		if i == 0 || char != prev {  
+			uniqueList = append(uniqueList, char)  
+		}  
+		// Update the previous character  
+		prev = char  
+	}  
+
+	// Convert the slice of runes back to a string  
+	return string(uniqueList)  
+} 
+
+func main() {  
+	// Input string  
+	inputString := "AAAAABBBBCCDAADD"  
+	// Call the uniqueInOrder function  
+	output := uniqueInOrder(inputString)  
+	// Print the output  
+	fmt.Println(output) // Output: ABCDAB  
+}
